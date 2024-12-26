@@ -1,41 +1,36 @@
 'use client';
-import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation'; // Hook for accessing query parameters
+
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './Banner.module.css';
 
-function BannerContent() {
-  // State to store the current localized content
-  const [content, setContent] = useState({});
-
-  // Hook to read query parameters
+export default function Banner() {
+  const [content, setContent] = useState(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Get the 'locale' query parameter or default to 'en'
     const locale = searchParams.get('locale') || 'en';
 
-    // Fetch translations dynamically based on the locale
     const fetchTranslations = async () => {
-      const response = await fetch(`/api/content?locale=${locale}`);
-      const data = await response.json();
-      setContent(data); // Update the content state
+      const res = await fetch(`/api/content?locale=${locale}`);
+      const data = await res.json();
+      setContent(data);
     };
 
     fetchTranslations();
-  }, [searchParams]); // Re-run effect whenever the query parameters change
+  }, [searchParams]);
+
+  if (!content) {
+    return (
+      <div className={styles.banner}>
+        <h1 className={styles.skeleton}>Loading...</h1>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.banner}>
-      {/* Render the localized welcome message */}
-      <h1>{content['banner.welcome'] || 'Loading...'}</h1>
+      <h1>{content['banner.welcome']}</h1>
     </div>
-  );
-}
-
-export default function Banner() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <BannerContent />
-    </Suspense>
   );
 }

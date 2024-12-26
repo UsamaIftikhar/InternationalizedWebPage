@@ -1,9 +1,10 @@
+import { Suspense } from 'react';
 import Banner from './banner/Banner';
 
-export default function Home() {
+export default async function Home() {
   return (
-    <main>
+    <Suspense fallback={<div>Loading...</div>}>
       <Banner />
-    </main>
+    </Suspense>
   );
 }

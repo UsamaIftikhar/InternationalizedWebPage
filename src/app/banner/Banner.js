@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation'; // Hook for accessing query parameters
 import styles from './Banner.module.css';
 
-export default function Banner() {
+function BannerContent() {
   // State to store the current localized content
   const [content, setContent] = useState({});
 
@@ -29,5 +29,13 @@ export default function Banner() {
       {/* Render the localized welcome message */}
       <h1>{content['banner.welcome'] || 'Loading...'}</h1>
     </div>
+  );
+}
+
+export default function Banner() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BannerContent />
+    </Suspense>
   );
 }

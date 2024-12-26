@@ -18,7 +18,7 @@ export default function Banner() {
         const data = await res.json();
         setContent(data);
       } catch (error) {
-        console.error('Error fetching translations:', error);
+        console.error(error);
       }
     };
 
